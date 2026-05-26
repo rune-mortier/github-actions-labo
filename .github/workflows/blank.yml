@@ -7,18 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
 
     steps:
       - name: Check out code repository
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: |
-          docker build \
-            -t hello-world-nginx:${{ github.ref_name }} \
-            -t hello-world-nginx:${{ github.sha }} \
-            .
+        run: docker build -t hello-world-nginx:${{ github.ref_name }} -t hello-world-nginx:${{ github.sha }} .
 
       - name: Run Docker container
         run: docker run -d -p 8080:80 hello-world-nginx:${{ github.ref_name }}
