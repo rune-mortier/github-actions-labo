@@ -17,9 +17,9 @@ jobs:
         run: docker login ghcr.io -u rune-mortier -p ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/rune-mortier/hello-world-nginx:${{ github.ref_name }} -t ghcr.io/rune-mortier/hello-world-nginx:${{ github.sha }} .
+        run: docker build -t ghcr.io/rune-mortier/hello-world-nginx:${{ github.head_ref }} -t ghcr.io/rune-mortier/hello-world-nginx:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/rune-mortier/hello-world-nginx:${{ github.ref_name }}
+          docker push ghcr.io/rune-mortier/hello-world-nginx:${{ github.head_ref }}
           docker push ghcr.io/rune-mortier/hello-world-nginx:${{ github.sha }}
