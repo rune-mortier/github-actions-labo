@@ -13,8 +13,13 @@ jobs:
       - name: Check out code repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t hello-world-nginx:${{ github.ref_name }} -t hello-world-nginx:${{ github.sha }} .
+      - name: Log in to GitHub Container Registry
+        run: docker login ghcr.io -u rune-mortier -p ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Docker container
-        run: docker run -d -p 8080:80 hello-world-nginx:${{ github.ref_name }}
+      - name: Build Docker image
+        run: docker build -t ghcr.io/rune-mortier/hello-world-nginx:${{ github.head_ref }} -t ghcr.io/rune-mortier/hello-world-nginx:${{ github.sha }} .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/rune-mortier/hello-world-nginx:${{ github.head_ref }}
+          docker push ghcr.io/rune-mortier/hello-world-nginx:${{ github.sha }}
