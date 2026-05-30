@@ -25,7 +25,7 @@ jobs:
 
       - name: Check pods in namespace
         run: kubectl get pods -n github-actions --kubeconfig $env:USERPROFILE\.kube\config
-        
+
       - name: Apply deployment
         run: kubectl apply -f k8s/deployment.yaml --kubeconfig $env:USERPROFILE\.kube\config
 
@@ -37,3 +37,9 @@ jobs:
 
       - name: Check deployment status
         run: kubectl get pods -n github-actions --kubeconfig $env:USERPROFILE\.kube\config
+      
+      - name: Create namespace if not exists
+        run: kubectl create namespace github-actions --dry-run=client -o yaml | kubectl apply -f - --kubeconfig $env:USERPROFILE\.kube\config
+
+      - name: Helm upgrade or install
+        run: helm upgrade --install hello-world ./hello-world-chart --namespace github-actions --set image.repository=rancher/hello-world --set image.tag=latest --kubeconfig $env:USERPROFILE\.kube\config
