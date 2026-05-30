@@ -25,3 +25,15 @@ jobs:
 
       - name: Check pods in namespace
         run: kubectl get pods -n github-actions --kubeconfig $env:USERPROFILE\.kube\config
+        
+      - name: Apply deployment
+        run: kubectl apply -f k8s/deployment.yaml --kubeconfig $env:USERPROFILE\.kube\config
+
+      - name: Apply service
+        run: kubectl apply -f k8s/service.yaml --kubeconfig $env:USERPROFILE\.kube\config
+
+      - name: Rollout restart deployment
+        run: kubectl rollout restart deployment/hello-world-deployment -n github-actions --kubeconfig $env:USERPROFILE\.kube\config
+
+      - name: Check deployment status
+        run: kubectl get pods -n github-actions --kubeconfig $env:USERPROFILE\.kube\config
