@@ -1,0 +1,27 @@
+name: Kubernetes Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Check out code repository
+        uses: actions/checkout@v4
+
+      - name: Generate random pod name
+        run: echo "POD_ID=$(openssl rand -hex 4)" >> $env:GITHUB_ENV
+
+      - name: Create pod manifest
+        run: |
+          (Get-Content k8s/pod.yaml) -replace '\${POD_ID}', '${{ env.POD_ID }}' | Set-Content k8s/pod-generated.yaml
+
+      - name: Apply pod to Kubernetes
+        run: kubectl apply -f k8s/pod-generated.yaml --kubeconfig $env:USERPROFILE\.kube\config
+
+      - name: Check pods in namespace
+        run: kubectl get pods -n github-actions --kubeconfig $env:USERPROFILE\.kube\config

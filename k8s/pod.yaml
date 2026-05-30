@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod-${POD_ID}
+  namespace: github-actions
+  labels:
+    name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: rancher/hello-world
